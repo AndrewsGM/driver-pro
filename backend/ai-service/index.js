@@ -11,10 +11,16 @@ app.get('/health', (req, res) => {
 });
 
 app.post('/analyze', (req, res) => {
-    res.json({
-        analysis: "Good driving behavior detected. Watch speed on turns.",
-        score: 85
-    });
+    const { prompt } = req.body;
+    console.log(`[AI Service] Analyzing prompt: ${prompt ? prompt.substring(0, 50) + '...' : 'No prompt'}`);
+
+    // Simulated LLM delay
+    setTimeout(() => {
+        res.json({
+            response: "Olá! Como seu Coach IA, notei que você está indo bem. Lembre-se sempre de verificar os retrovisores antes de mudar de faixa. Para baliza, a dica de ouro é alinhar o retrovisor com o carro da frente antes de começar a girar o volante. Quer mais alguma dica específica?",
+            confidence: 0.98
+        });
+    }, 1000);
 });
 
 app.listen(PORT, () => {

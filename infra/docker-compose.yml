@@ -45,7 +45,7 @@ services:
 
   # Application Microservices
   auth-service:
-    build: ./backend/auth-service
+    build: ../backend/auth-service
     ports:
       - "3001:3001"
     environment:
@@ -55,7 +55,7 @@ services:
       - auth-db
 
   class-service:
-    build: ./backend/class-service
+    build: ../backend/class-service
     ports:
       - "3002:3002"
     environment:
@@ -65,7 +65,7 @@ services:
       - class-db
 
   ai-service:
-    build: ./backend/ai-service
+    build: ../backend/ai-service
     ports:
       - "3003:3003"
     environment:
@@ -75,7 +75,7 @@ services:
       - ai-db
 
   exam-service:
-    build: ./backend/exam-service
+    build: ../backend/exam-service
     ports:
       - "3004:3004"
     environment:
@@ -85,7 +85,7 @@ services:
       - exam-db
 
   payment-service:
-    build: ./backend/payment-service
+    build: ../backend/payment-service
     ports:
       - "3005:3005"
     environment:
@@ -95,7 +95,7 @@ services:
       - payment-db
 
   biometrics-service:
-    build: ./backend/biometrics-service
+    build: ../backend/biometrics-service
     ports:
       - "3006:3006"
 

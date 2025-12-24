@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+  # Database Services (Mocked for now with Postgres/Mongo images)
+  auth-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: auth_db
+    ports:
+      - "5432:5432"
+
+  class-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: class_db
+    ports:
+      - "5433:5432"
+
+  ai-db:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+
+  exam-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: exam_db
+    ports:
+      - "5434:5432"
+
+  payment-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: payment_db
+    ports:
+      - "5435:5432"
+
+  # Application Microservices
+  auth-service:
+    build: ./backend/auth-service
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_HOST=auth-db
+      - DB_PORT=5432
+    depends_on:
+      - auth-db
+
+  class-service:
+    build: ./backend/class-service
+    ports:
+      - "3002:3002"
+    environment:
+      - DB_HOST=class-db
+      - DB_PORT=5432
+    depends_on:
+      - class-db
+
+  ai-service:
+    build: ./backend/ai-service
+    ports:
+      - "3003:3003"
+    environment:
+      - DB_HOST=ai-db
+      - DB_PORT=27017
+    depends_on:
+      - ai-db
+
+  exam-service:
+    build: ./backend/exam-service
+    ports:
+      - "3004:3004"
+    environment:
+      - DB_HOST=exam-db
+      - DB_PORT=5432
+    depends_on:
+      - exam-db
+
+  payment-service:
+    build: ./backend/payment-service
+    ports:
+      - "3005:3005"
+    environment:
+      - DB_HOST=payment-db
+      - DB_PORT=5432
+    depends_on:
+      - payment-db
+
+  biometrics-service:
+    build: ./backend/biometrics-service
+    ports:
+      - "3006:3006"
+
+  gateway:
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - auth-service
+      - class-service
+  # Frontend (Served via Vite for local dev, or Nginx in prod)
+  # For this task, we assume the user runs 'npm run dev' locally
+  # but here is how it would look:
+  # frontend:
+  #   build: .
+  #   ports:
+  #     - "5173:5173"
